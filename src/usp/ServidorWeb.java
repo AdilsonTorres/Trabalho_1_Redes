@@ -10,13 +10,15 @@ public class ServidorWeb
 	{
 		int porta = 9090; //porta aonde o servidor vai aguardar por pedido de conexao.
 		ServerSocket sw;  //Socket servidor
+		Socket socket;
 		ConexaoWeb conexao;
 		
 		try 
 		{	
-			//crie aqui o socket Servidor!!!!!!!!(objeto = new ServerSocket(parametros))
+			//crie aqui o socket Servidor!(objeto = new ServerSocket(parametros))
 			sw = new ServerSocket(porta);
-			conexao = new ConexaoWeb(sw.accept());
+			socket = sw.accept();
+			conexao = new ConexaoWeb(socket);
 			conexao.TrataConexao();
 			
 			while(true) 
