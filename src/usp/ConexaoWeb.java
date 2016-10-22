@@ -25,6 +25,8 @@ public class ConexaoWeb
 	    File arquivo; 			//Objeto para os arquivos que vao ser enviados. 
 	    String NomeArq; 		//String para o nome do arquivo.
 	    String raiz = "root"; 	//String para o diretorio raiz.
+	    String host = "host0";  //String para host padrao.
+	    String datapath = "";   //String para o caminho final do arquivo.
 		String inicio;			//String para guardar o inicio da linha
 		String senha_user = "";	//String para armazenar o nome e a senha do usuario
 		String linha;           //String para leitura de cabeçalho
@@ -60,10 +62,26 @@ public class ConexaoWeb
 				if (NomeArq.endsWith("/")) NomeArq = NomeArq + arqi;
 				ct = TipoArquivo(NomeArq);
 				
+				// Lê todo o cabeçalho
+				while (!(linha = entrada.readLine()).equals(""))
+				{
+					st = new StringTokenizer(linha);
+					
+					if (st.nextToken().startsWith("HOST"))
+					{
+						host = st.nextToken();
+						System.out.println(host);
+						System.out.println(NomeArq);
+					}
+				}
+				
 				if (metodo.equals("GET"))
 				{
+					System.out.println("Lendo arquivo");
 					//Crie aqui o objeto do tipo File
-					arquivo = new File(raiz,NomeArq.substring(1,NomeArq.length()));
+					datapath = host + NomeArq;
+					System.out.println(datapath);
+					arquivo = new File(raiz,datapath.substring(0,datapath.length()));
 					
 					//agora faca a leitura do arquivo.
 					FileInputStream fis = new FileInputStream(arquivo);
@@ -85,7 +103,7 @@ public class ConexaoWeb
 				saida.writeBytes("HTTP/1.1 404 Not Found\n");
 				saida.writeBytes("Content-Type: text/html\n");
 				saida.writeBytes("\n");
-				saida.writeBytes("<html>Arquivo não encontrado</html>");
+				saida.writeBytes("<html>Arquivo nao encontrado</html>");
 				saida.close();
 			}   
 		}
