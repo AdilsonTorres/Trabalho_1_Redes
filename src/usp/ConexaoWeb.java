@@ -79,8 +79,14 @@ public class ConexaoWeb
 			//este catch e para o caso do arquivo nao existir. Mande para o browser uma mensagem de not found, e um texto html!
 			catch(IOException e)
 			{
-				System.out.println("Erro no tratamento da requisição");
+				System.out.println("Erro ao ler arquivo");
 				System.out.println(e.getMessage());
+				
+				saida.writeBytes("HTTP/1.1 404 Not Found\n");
+				saida.writeBytes("Content-Type: text/html\n");
+				saida.writeBytes("\n");
+				saida.writeBytes("<html>Arquivo não encontrado</html>");
+				saida.close();
 			}   
 		}
 		catch(IOException e)

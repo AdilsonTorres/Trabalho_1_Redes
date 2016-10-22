@@ -21,10 +21,15 @@ public class ServidorWeb
 			conexao = new ConexaoWeb(socket);
 			conexao.TrataConexao();
 			
+			// libera a porta
+			sw.close();
+			
+			/*
 			while(true) 
 			{
 		
 			}
+			*/
 		}
 		catch(IOException e) 
 		{
