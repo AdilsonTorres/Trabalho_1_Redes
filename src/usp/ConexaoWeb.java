@@ -59,6 +59,7 @@ public class ConexaoWeb
 				metodo = st.nextToken();
 				NomeArq = st.nextToken();
 				versao = st.nextToken();
+				// Jogar para dentro do GET *****************
 				if (NomeArq.endsWith("/")) NomeArq = NomeArq + arqi;
 				ct = TipoArquivo(NomeArq);
 				
@@ -67,7 +68,7 @@ public class ConexaoWeb
 				{
 					st = new StringTokenizer(linha);
 					
-					if (st.nextToken().startsWith("HOST"))
+					if (st.nextToken().startsWith("Host"))
 					{
 						host = st.nextToken();
 						System.out.println(host);
@@ -78,9 +79,9 @@ public class ConexaoWeb
 				if (metodo.equals("GET"))
 				{
 					System.out.println("Lendo arquivo");
-					//Crie aqui o objeto do tipo File
 					datapath = host + NomeArq;
 					System.out.println(datapath);
+					//Crie aqui o objeto do tipo File
 					arquivo = new File(raiz,datapath.substring(0,datapath.length()));
 					
 					//agora faca a leitura do arquivo.

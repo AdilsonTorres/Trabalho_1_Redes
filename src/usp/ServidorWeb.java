@@ -15,21 +15,17 @@ public class ServidorWeb
 		
 		try 
 		{	
-			//crie aqui o socket Servidor!(objeto = new ServerSocket(parametros))
-			sw = new ServerSocket(porta);
-			socket = sw.accept();
-			conexao = new ConexaoWeb(socket);
-			conexao.TrataConexao();
-			
-			// libera a porta
-			sw.close();
-			
-			/*
-			while(true) 
+			while(true)
 			{
-		
+				//crie aqui o socket Servidor!(objeto = new ServerSocket(parametros))
+				sw = new ServerSocket(porta);
+				socket = sw.accept(); //Aguardar um pedido de conexão.
+				conexao = new ConexaoWeb(socket);
+				conexao.TrataConexao();
+				
+				// libera a porta
+				sw.close();
 			}
-			*/
 		}
 		catch(IOException e) 
 		{
