@@ -21,7 +21,7 @@ public class ServidorWeb
 				sw = new ServerSocket(porta);
 				socket = sw.accept(); //Aguardar um pedido de conexão.
 				conexao = new ConexaoWeb(socket);
-				conexao.TrataConexao();
+				conexao.start();
 				
 				// libera a porta
 				sw.close();

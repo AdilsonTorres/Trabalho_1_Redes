@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class ConexaoWeb
+public class ConexaoWeb extends Thread
 {
 	Socket socket; 					    //socket que vai tratar com o cliente.
 	static String arqi = "index.html"; 	//se nao for passado um arquivo, o servidor fornecera a pagina index.html
@@ -17,7 +17,7 @@ public class ConexaoWeb
 	
 	//metodo TrataConexao, aqui serao trocadas informacoes com o Browser...
 
-	public void TrataConexao() 
+	public void run() 
 	{
 	    String metodo=""; 		//String que vai guardar o metodo HTTP requerido
 	    String ct; 				//String que guarda o tipo de arquivo: text/html;image/gif....
