@@ -8,28 +8,39 @@ public class ConexaoWeb extends Thread
 {
 	Socket socket; 					    //socket que vai tratar com o cliente.
 	static String arqi = "index.html"; 	//se nao for passado um arquivo, o servidor fornecera a pagina index.html
+	DataOutputStream log;               //objeto para aruivo de log
 	
 	//coloque aqui o construtor
 	public ConexaoWeb(Socket socket)
 	{
 		this.socket = socket;
+		try
+		{
+			log = new DataOutputStream(new FileOutputStream("WebLog.txt", true));
+		}
+		catch (Exception e) {
+			System.out.println("Erro ao inicializar arquivo de log");
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	//metodo TrataConexao, aqui serao trocadas informacoes com o Browser...
 
 	public void run() 
 	{
-	    String metodo=""; 		//String que vai guardar o metodo HTTP requerido
-	    String ct; 				//String que guarda o tipo de arquivo: text/html;image/gif....
-	    String versao = ""; 	//String que guarda a versao do Protocolo.
-	    File arquivo; 			//Objeto para os arquivos que vao ser enviados. 
-	    String NomeArq; 		//String para o nome do arquivo.
-	    String raiz = "root"; 	//String para o diretorio raiz.
-	    String host = "host0";  //String para host padrao.
-	    String datapath = "";   //String para o caminho final do arquivo.
-		String inicio;			//String para guardar o inicio da linha
-		String senha_user = "";	//String para armazenar o nome e a senha do usuario
-		String linha;           //String para leitura de cabeçalho
+	    String metodo=""; 		   //String que vai guardar o metodo HTTP requerido
+	    String ct; 				   //String que guarda o tipo de arquivo: text/html;image/gif....
+	    String versao = ""; 	   //String que guarda a versao do Protocolo.
+	    File arquivo; 		 	   //Objeto para os arquivos que vao ser enviados. 
+	    String NomeArq; 		   //String para o nome do arquivo.
+	    String raiz = "root"; 	   //String para o diretorio raiz.
+	    String host = "host0";     //String para host padrao.
+	    String datapath = "";      //String para o caminho final do arquivo.
+		String inicio;			   //String para guardar o inicio da linha
+		String senha_user = "";	   //String para armazenar o nome e a senha do usuario
+		String primeiraLinha = ""; //String para armazenar a primeira linha do cabeçalho 
+		String linha;              //String para leitura de cabeçalho
+		String ip;                 //String para id do cliente
 		Date now = new Date();
 		
 		try 
@@ -53,15 +64,21 @@ public class ConexaoWeb extends Thread
   			// Enviar o arquivo
 			try 
 			{
-				linha = entrada.readLine();
-				System.out.println("Primeira linha: " + linha);
-				StringTokenizer st = new StringTokenizer(linha);
+				// pega o ip do cliente para salvar no log
+				ip = socket.getInetAddress().getHostAddress();
+				
+				primeiraLinha = entrada.readLine();
+				System.out.println("Primeira linha: " + primeiraLinha);
+				StringTokenizer st = new StringTokenizer(primeiraLinha);
 				metodo = st.nextToken();
 				NomeArq = st.nextToken();
 				versao = st.nextToken();
 				// Jogar para dentro do GET *****************
 				if (NomeArq.endsWith("/")) NomeArq = NomeArq + arqi;
 				ct = TipoArquivo(NomeArq);
+				
+				// LOG
+				log.writeBytes(ip + " - [" + now.toString() + "]\n");
 				
 				// Lê todo o cabeçalho
 				while (!(linha = entrada.readLine()).equals(""))
@@ -93,6 +110,9 @@ public class ConexaoWeb extends Thread
 					saida.write(dado);
 					
 					fis.close();
+					
+					// LOG
+					log.writeBytes("\"" + primeiraLinha + "\" 200 " + dado.length + "\n");
 				}	
 			}
 			//este catch e para o caso do arquivo nao existir. Mande para o browser uma mensagem de not found, e um texto html!
@@ -100,6 +120,9 @@ public class ConexaoWeb extends Thread
 			{
 				System.out.println("Erro ao ler arquivo");
 				System.out.println(e.getMessage());
+				
+				// LOG
+				log.writeBytes("\"" + primeiraLinha + "\" 404 0 \n");
 				
 				saida.writeBytes("HTTP/1.1 404 Not Found\n");
 				saida.writeBytes("Content-Type: text/html\n");
