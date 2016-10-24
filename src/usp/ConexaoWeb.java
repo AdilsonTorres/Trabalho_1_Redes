@@ -54,7 +54,7 @@ public class ConexaoWeb extends Thread
 			try 
 			{
 				linha = entrada.readLine();
-				System.out.println(linha);
+				System.out.println("Primeira linha: " + linha);
 				StringTokenizer st = new StringTokenizer(linha);
 				metodo = st.nextToken();
 				NomeArq = st.nextToken();
@@ -71,8 +71,8 @@ public class ConexaoWeb extends Thread
 					if (st.nextToken().startsWith("Host"))
 					{
 						host = st.nextToken();
-						System.out.println(host);
-						System.out.println(NomeArq);
+						System.out.println("Host: " + host);
+						System.out.println("Nome do arquivo: " + NomeArq);
 					}
 				}
 				
@@ -80,7 +80,7 @@ public class ConexaoWeb extends Thread
 				{
 					System.out.println("Lendo arquivo");
 					datapath = host + NomeArq;
-					System.out.println(datapath);
+					System.out.println("Datapath: " + datapath);
 					//Crie aqui o objeto do tipo File
 					arquivo = new File(raiz,datapath.substring(0,datapath.length()));
 					
